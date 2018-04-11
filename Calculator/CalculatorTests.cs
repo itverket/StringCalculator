@@ -124,6 +124,14 @@ namespace Calculator
             Assert.IsTrue(didThrowException);
         }
 
+        [TestMethod]
+        public void Add_NumbersLargerThan1000_ShouldBeIgnored()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("1,2,1001,3");
+            Assert.AreEqual(6, sum);
+        }
     }
 
     public class Calculator
@@ -191,6 +199,10 @@ namespace Calculator
                 if (number < 0)
                 {
                     negativeNumbers.Add(number);
+                }
+                else if (number > 1000)
+                {
+                    continue;
                 }
 
                 sum += int.Parse(numberString);
