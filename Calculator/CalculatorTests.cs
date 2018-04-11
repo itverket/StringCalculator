@@ -173,14 +173,14 @@ namespace Calculator
 
         private string[] GetCustomSeparators(string expression)
         {
-            var indexStartNumbers = expression.IndexOf("\n") + 1;
+            var indexStartNumbers = expression.IndexOf(EndCustomSeparatorIndicator) + 1;
             var separator = expression.Substring(2, indexStartNumbers - 3);
             return new string[] { separator };
         }
 
         private int SumNumbers(string delimitedNumbers, string[] separators)
         {
-            var numberStrings = delimitedNumbers.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+            var numberStrings = delimitedNumbers.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
             var negativeNumbers = new List<int>();
 
