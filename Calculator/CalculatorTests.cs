@@ -44,23 +44,25 @@ namespace Calculator
 
     public class Calculator
     {
-        public int Add(string numberString)
+        private const string Separator = ",";
+
+        public int Add(string numbersList)
         {
-            if (string.IsNullOrEmpty(numberString))
+            if (string.IsNullOrEmpty(numbersList))
             {
                 return 0;
             }
 
-            if (numberString.Contains(","))
+            if (numbersList.Contains(Separator))
             {
-                var index = numberString.IndexOf(",");
+                var indexSeparator = numbersList.IndexOf(Separator);
 
-                var firstNumber = numberString.Substring(0, index);
-                var secondNumber = numberString.Substring(index + 1);
+                var firstNumber = numbersList.Substring(0, indexSeparator);
+                var secondNumber = numbersList.Substring(indexSeparator + 1);
                 return int.Parse(firstNumber) + int.Parse(secondNumber);
             }
 
-            return int.Parse(numberString);
+            return int.Parse(numbersList);
         }
     }
 }
