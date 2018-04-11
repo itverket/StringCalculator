@@ -64,27 +64,32 @@ namespace Calculator
     {
         private const string Separator = ",";
 
-        public int Add(string numbersList)
+        public int Add(string commaSeparatedNumbers)
         {
-            if (string.IsNullOrEmpty(numbersList))
+            if (string.IsNullOrEmpty(commaSeparatedNumbers))
             {
                 return 0;
             }
 
-            if (numbersList.Contains(Separator))
+            if (commaSeparatedNumbers.Contains(Separator))
             {
-                var numbers = numbersList.Split(Separator);
-
-                var sum = 0;
-                foreach(var number in numbers)
-                {
-                    sum += int.Parse(number);
-                }
-
-                return sum;
+                return SumNumbers(commaSeparatedNumbers);
             }
 
-            return int.Parse(numbersList);
+            return int.Parse(commaSeparatedNumbers);
+        }
+
+        private int SumNumbers(string commaSeparatedNumbers)
+        {
+            var numbers = commaSeparatedNumbers.Split(Separator);
+
+            var sum = 0;
+            foreach (var number in numbers)
+            {
+                sum += int.Parse(number);
+            }
+
+            return sum;
         }
     }
 }
