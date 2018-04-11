@@ -31,6 +31,15 @@ namespace Calculator
             var sum = calculator.Add("2");
             Assert.AreEqual(2, sum);
         }
+
+        [TestMethod]
+        public void Add_TwoCommaSeparatedNumbers()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("2,3");
+            Assert.AreEqual(5, sum);
+        }
     }
 
     public class Calculator
@@ -40,6 +49,15 @@ namespace Calculator
             if (string.IsNullOrEmpty(numberString))
             {
                 return 0;
+            }
+
+            if (numberString.Contains(","))
+            {
+                var index = numberString.IndexOf(",");
+
+                var firstNumber = numberString.Substring(0, index);
+                var secondNumber = numberString.Substring(index + 1);
+                return int.Parse(firstNumber) + int.Parse(secondNumber);
             }
 
             return int.Parse(numberString);
