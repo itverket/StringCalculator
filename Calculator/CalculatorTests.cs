@@ -55,14 +55,24 @@ namespace Calculator
         {
             var calculator = new Calculator();
 
-            var sum = calculator.Add("2,3,4,5,6,7,8");
+            var sum = calculator.Add("2\n3,4,5,6\n7,8");
             Assert.AreEqual(2+3+4+5+6+7+8, sum);
         }
+
+        [TestMethod]
+        public void Add_NewLineAndCommaSeparatedNumbers()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("2,3,4,5,6,7,8");
+            Assert.AreEqual(2 + 3 + 4 + 5 + 6 + 7 + 8, sum);
+        }
+
     }
 
     public class Calculator
     {
-        private const string Separator = ",";
+        private static readonly char[] Separators = { ',', '\n' };
 
         public int Add(string commaSeparatedNumbers)
         {
@@ -71,17 +81,12 @@ namespace Calculator
                 return 0;
             }
 
-            if (commaSeparatedNumbers.Contains(Separator))
-            {
-                return SumNumbers(commaSeparatedNumbers);
-            }
-
-            return int.Parse(commaSeparatedNumbers);
+            return SumNumbers(commaSeparatedNumbers);
         }
 
         private int SumNumbers(string commaSeparatedNumbers)
         {
-            var numbers = commaSeparatedNumbers.Split(Separator);
+            var numbers = commaSeparatedNumbers.Split(Separators);
 
             var sum = 0;
             foreach (var number in numbers)
