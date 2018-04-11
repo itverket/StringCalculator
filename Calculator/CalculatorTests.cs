@@ -80,7 +80,7 @@ namespace Calculator
 
     public class Calculator
     {
-        private static readonly char[] Separators = { ',', '\n' };
+        private static readonly string[] Separators = { ",", "\n" };
 
         public int Add(string commaSeparatedNumbers)
         {
@@ -89,22 +89,38 @@ namespace Calculator
                 return 0;
             }
 
+            var delimiters = GetSeparators(commaSeparatedNumbers);
+            var numbers = GetNumbers(commaSeparatedNumbers);
+
+            return SumNumbers(numbers, delimiters);
+        }
+
+        private string GetNumbers(string commaSeparatedNumbers)
+        {
             if (commaSeparatedNumbers.StartsWith("//"))
             {
                 var indexStartNumbers = commaSeparatedNumbers.IndexOf("\n") + 1;
-                var separator = commaSeparatedNumbers.Substring(2, indexStartNumbers - 3);
-                var numbers = commaSeparatedNumbers.Substring(indexStartNumbers);
-                return SumNumbers(numbers, separator);
+                return commaSeparatedNumbers.Substring(indexStartNumbers);
             }
 
-            return SumNumbers(commaSeparatedNumbers);
+            return commaSeparatedNumbers;
         }
 
-        private int SumNumbers(string commaSeparatedNumbers, string separator = null)
+        private string[] GetSeparators(string commaSeparatedNumbers)
         {
-            var numbers = separator != null
-                ? commaSeparatedNumbers.Split(separator)
-                : commaSeparatedNumbers.Split(Separators);
+            if (!commaSeparatedNumbers.StartsWith("//"))
+            {
+                return Separators;
+            }
+
+            var indexStartNumbers = commaSeparatedNumbers.IndexOf("\n") + 1;
+            var separator = commaSeparatedNumbers.Substring(2, indexStartNumbers - 3);
+            return new string[] { separator };
+        }
+
+        private int SumNumbers(string commaSeparatedNumbers, string[] separators)
+        {
+            var numbers = commaSeparatedNumbers.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
 
             var sum = 0;
             foreach (var number in numbers)
