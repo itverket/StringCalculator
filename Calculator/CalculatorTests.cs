@@ -22,6 +22,15 @@ namespace Calculator
             var sum = calculator.Add("1");
             Assert.AreEqual(1, sum);
         }
+
+        [TestMethod]
+        public void Add_Two_Two()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("2");
+            Assert.AreEqual(2, sum);
+        }
     }
 
     public class Calculator
