@@ -75,7 +75,7 @@ namespace Calculator
         {
             var calculator = new Calculator();
 
-            var sum = calculator.Add("//;\n1;2;3");
+            var sum = calculator.Add("//[;]\n1;2;3");
             Assert.AreEqual(6, sum);
         }
 
@@ -132,13 +132,22 @@ namespace Calculator
             var sum = calculator.Add("1,2,1001,3");
             Assert.AreEqual(6, sum);
         }
+
+        [TestMethod]
+        public void Add_CustomLargeSeparator()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("//[***]\n4***5***6");
+            Assert.AreEqual(15, sum);
+        }
     }
 
     public class Calculator
     {
         private static readonly string[] Separators = { ",", "\n" };
-        private const string StartCustomSeparatorIndicator = "//";
-        private const string EndCustomSeparatorIndicator = "\n";
+        private const string StartCustomSeparatorIndicator = "//[";
+        private const string EndCustomSeparatorIndicator = "]\n";
         private const int MaxNumberSupported = 1000;
 
         public int Add(string expression)
