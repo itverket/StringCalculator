@@ -129,7 +129,7 @@ namespace Calculator
         {
             var calculator = new Calculator();
 
-            var sum = calculator.Add("1,2,1001,3");
+            var sum = calculator.Add("1,2,1001,3,2345");
             Assert.AreEqual(6, sum);
         }
 
@@ -140,6 +140,24 @@ namespace Calculator
 
             var sum = calculator.Add("//[***]\n4***5***6");
             Assert.AreEqual(15, sum);
+        }
+
+        [TestMethod]
+        public void Add_MultipleCustomSeparators()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("//[*][+][%]\n4*5+6%9");
+            Assert.AreEqual(4 + 5 + 6 + 9, sum);
+        }
+
+        [TestMethod]
+        public void Add_MultipleCustomLargeSeparator()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("//[***][++++][%%]\n4***5++++6%%9");
+            Assert.AreEqual(4 + 5 + 6 + 9, sum);
         }
     }
 
@@ -192,9 +210,11 @@ namespace Calculator
         private string[] GetCustomSeparators(string expression)
         {
             var indexStartNumbers = expression.IndexOf(EndCustomSeparatorIndicator) + 1;
-            var separator = expression.Substring(StartCustomSeparatorIndicator.Length, 
+            var delimitedSeparators = expression.Substring(StartCustomSeparatorIndicator.Length, 
                                                  indexStartNumbers - 1 - StartCustomSeparatorIndicator.Length);
-            return new string[] { separator };
+
+            var separators = delimitedSeparators.Split(new char[] { '[', ']' }, StringSplitOptions.RemoveEmptyEntries);
+            return separators;
         }
 
         private int SumNumbers(string delimitedNumbers, string[] separators)
