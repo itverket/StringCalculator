@@ -40,6 +40,24 @@ namespace Calculator
             var sum = calculator.Add("2,3");
             Assert.AreEqual(5, sum);
         }
+
+        [TestMethod]
+        public void Add_ManyCommaSeparatedNumbers()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("2,3,4,5");
+            Assert.AreEqual(14, sum);
+        }
+
+        [TestMethod]
+        public void Add_ManyMoreCommaSeparatedNumbers()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("2,3,4,5,6,7,8");
+            Assert.AreEqual(2+3+4+5+6+7+8, sum);
+        }
     }
 
     public class Calculator
@@ -55,11 +73,15 @@ namespace Calculator
 
             if (numbersList.Contains(Separator))
             {
-                var indexSeparator = numbersList.IndexOf(Separator);
+                var numbers = numbersList.Split(Separator);
 
-                var firstNumber = numbersList.Substring(0, indexSeparator);
-                var secondNumber = numbersList.Substring(indexSeparator + 1);
-                return int.Parse(firstNumber) + int.Parse(secondNumber);
+                var sum = 0;
+                foreach(var number in numbers)
+                {
+                    sum += int.Parse(number);
+                }
+
+                return sum;
             }
 
             return int.Parse(numbersList);
