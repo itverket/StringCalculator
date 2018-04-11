@@ -81,46 +81,58 @@ namespace Calculator
     public class Calculator
     {
         private static readonly string[] Separators = { ",", "\n" };
+        private const string StartCustomSeparatorIndicator = "//";
+        private const string EndCustomSeparatorIndicator = "\n"; 
 
-        public int Add(string commaSeparatedNumbers)
+        public int Add(string expression)
         {
-            if (string.IsNullOrEmpty(commaSeparatedNumbers))
+            if (string.IsNullOrEmpty(expression))
             {
                 return 0;
             }
 
-            var delimiters = GetSeparators(commaSeparatedNumbers);
-            var numbers = GetNumbers(commaSeparatedNumbers);
+            var delimiters = GetSeparators(expression);
+            var numbers = GetNumbers(expression);
 
             return SumNumbers(numbers, delimiters);
         }
 
-        private string GetNumbers(string commaSeparatedNumbers)
+        private bool HasCustomSeparator(string expression)
         {
-            if (commaSeparatedNumbers.StartsWith("//"))
-            {
-                var indexStartNumbers = commaSeparatedNumbers.IndexOf("\n") + 1;
-                return commaSeparatedNumbers.Substring(indexStartNumbers);
-            }
-
-            return commaSeparatedNumbers;
+            return expression.StartsWith(StartCustomSeparatorIndicator);
         }
 
-        private string[] GetSeparators(string commaSeparatedNumbers)
+        private string GetNumbers(string expression)
         {
-            if (!commaSeparatedNumbers.StartsWith("//"))
+            if (HasCustomSeparator(expression))
+            {
+                var indexStartNumbers = expression.IndexOf(EndCustomSeparatorIndicator) + 1;
+                return expression.Substring(indexStartNumbers);
+            }
+
+            return expression;
+        }
+
+        private string[] GetSeparators(string expression)
+        {
+            if (!HasCustomSeparator(expression))
             {
                 return Separators;
             }
 
-            var indexStartNumbers = commaSeparatedNumbers.IndexOf("\n") + 1;
-            var separator = commaSeparatedNumbers.Substring(2, indexStartNumbers - 3);
+            return GetCustomSeparators(expression);
+        }
+
+        private string[] GetCustomSeparators(string expression)
+        {
+            var indexStartNumbers = expression.IndexOf("\n") + 1;
+            var separator = expression.Substring(2, indexStartNumbers - 3);
             return new string[] { separator };
         }
 
-        private int SumNumbers(string commaSeparatedNumbers, string[] separators)
+        private int SumNumbers(string delimitedNumbers, string[] separators)
         {
-            var numbers = commaSeparatedNumbers.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+            var numbers = delimitedNumbers.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
 
             var sum = 0;
             foreach (var number in numbers)
