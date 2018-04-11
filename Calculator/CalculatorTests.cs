@@ -68,6 +68,14 @@ namespace Calculator
             Assert.AreEqual(2 + 3 + 4 + 5 + 6 + 7 + 8, sum);
         }
 
+        [TestMethod]
+        public void Add_CustomSeparator()
+        {
+            var calculator = new Calculator();
+
+            var sum = calculator.Add("//;\n1;2;3");
+            Assert.AreEqual(6, sum);
+        }
     }
 
     public class Calculator
@@ -81,12 +89,22 @@ namespace Calculator
                 return 0;
             }
 
+            if (commaSeparatedNumbers.StartsWith("//"))
+            {
+                var indexStartNumbers = commaSeparatedNumbers.IndexOf("\n") + 1;
+                var separator = commaSeparatedNumbers.Substring(2, indexStartNumbers - 3);
+                var numbers = commaSeparatedNumbers.Substring(indexStartNumbers);
+                return SumNumbers(numbers, separator);
+            }
+
             return SumNumbers(commaSeparatedNumbers);
         }
 
-        private int SumNumbers(string commaSeparatedNumbers)
+        private int SumNumbers(string commaSeparatedNumbers, string separator = null)
         {
-            var numbers = commaSeparatedNumbers.Split(Separators);
+            var numbers = separator != null
+                ? commaSeparatedNumbers.Split(separator)
+                : commaSeparatedNumbers.Split(Separators);
 
             var sum = 0;
             foreach (var number in numbers)
