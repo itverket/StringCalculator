@@ -35,14 +35,14 @@ namespace Calculator
 
     public class Calculator
     {
-        public int Add(string text)
+        public int Add(string numberString)
         {
-            if (string.IsNullOrEmpty(text))
+            if (string.IsNullOrEmpty(numberString))
             {
                 return 0;
             }
 
-            return int.Parse(text);
+            return int.Parse(numberString);
         }
     }
 }
