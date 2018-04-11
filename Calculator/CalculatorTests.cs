@@ -138,7 +138,8 @@ namespace Calculator
     {
         private static readonly string[] Separators = { ",", "\n" };
         private const string StartCustomSeparatorIndicator = "//";
-        private const string EndCustomSeparatorIndicator = "\n"; 
+        private const string EndCustomSeparatorIndicator = "\n";
+        private const int MaxNumberSupported = 1000;
 
         public int Add(string expression)
         {
@@ -182,7 +183,8 @@ namespace Calculator
         private string[] GetCustomSeparators(string expression)
         {
             var indexStartNumbers = expression.IndexOf(EndCustomSeparatorIndicator) + 1;
-            var separator = expression.Substring(2, indexStartNumbers - 3);
+            var separator = expression.Substring(StartCustomSeparatorIndicator.Length, 
+                                                 indexStartNumbers - 1 - StartCustomSeparatorIndicator.Length);
             return new string[] { separator };
         }
 
@@ -200,7 +202,7 @@ namespace Calculator
                 {
                     negativeNumbers.Add(number);
                 }
-                else if (number > 1000)
+                else if (number > MaxNumberSupported)
                 {
                     continue;
                 }
