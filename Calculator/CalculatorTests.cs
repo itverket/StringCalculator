@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Calculator
@@ -76,6 +78,52 @@ namespace Calculator
             var sum = calculator.Add("//;\n1;2;3");
             Assert.AreEqual(6, sum);
         }
+
+        [TestMethod]
+        public void Add_NegativeNumbers_ThrowException()
+        {
+            var calculator = new Calculator();
+
+            var didThrowException = false;
+            try 
+            {
+                var sum = calculator.Add("-3");
+            }
+            catch(Exception e)
+            {
+                didThrowException = true;
+
+                Assert.IsTrue(e.Message.Contains("negatives not allowed"));
+                Assert.IsTrue(e.Message.Contains("-3"));
+            }
+
+            Assert.IsTrue(didThrowException);
+        }
+
+        [TestMethod]
+        public void Add_MultipleNegativeNumbers_ThrowException()
+        {
+            var calculator = new Calculator();
+
+            var didThrowException = false;
+            try
+            {
+                var sum = calculator.Add("-1,2,-3,4");
+            }
+            catch (Exception e)
+            {
+                didThrowException = true;
+
+                Assert.IsTrue(e.Message.Contains("negatives not allowed"));
+                Assert.IsTrue(e.Message.Contains("-1"));
+                Assert.IsFalse(e.Message.Contains("2"));
+                Assert.IsTrue(e.Message.Contains("-3"));
+                Assert.IsFalse(e.Message.Contains("4"));
+            }
+
+            Assert.IsTrue(didThrowException);
+        }
+
     }
 
     public class Calculator
@@ -132,12 +180,25 @@ namespace Calculator
 
         private int SumNumbers(string delimitedNumbers, string[] separators)
         {
-            var numbers = delimitedNumbers.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+            var numberStrings = delimitedNumbers.Split(separators, System.StringSplitOptions.RemoveEmptyEntries);
+
+            var negativeNumbers = new List<int>();
 
             var sum = 0;
-            foreach (var number in numbers)
+            foreach (var numberString in numberStrings)
             {
-                sum += int.Parse(number);
+                var number = int.Parse(numberString);
+                if (number < 0)
+                {
+                    negativeNumbers.Add(number);
+                }
+
+                sum += int.Parse(numberString);
+            }
+
+            if (negativeNumbers.Count > 0)
+            {
+                throw new Exception("negatives not allowed: " + string.Concat(negativeNumbers));
             }
 
             return sum;
